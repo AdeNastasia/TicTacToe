@@ -5,7 +5,7 @@ public class TicTacToe {
     public static int WIDTH = 3;
     public static String[][] gameField = new String[HEIGHT][WIDTH];
     public static String signThatUsed = "";
-    public static boolean isWinnerExist = false;
+    public static boolean isGameStopped = false;
     public static Player[] players = new Player[2];
     public static Player currentPlayer;
     public static Player winner;
@@ -18,7 +18,7 @@ public class TicTacToe {
         drawGameField();
         currentPlayer = whoIsFirst();
         System.out.printf("%s your sign is \"O\", so it's your turn ;)\n", currentPlayer.getName());
-        while (!isWinnerExist) {
+        while (!isGameStopped) {
             move(currentPlayer);
             drawGameField();
             winnerExist();
@@ -163,8 +163,8 @@ public class TicTacToe {
             }
         }
 
-        isWinnerExist = isAnyHorizontalFull || isAnyVerticalFull || isFirstDiagonalFull || isSecondDiagonalFull;
-        if (isWinnerExist) {
+        isGameStopped = isAnyHorizontalFull || isAnyVerticalFull || isFirstDiagonalFull || isSecondDiagonalFull;
+        if (isGameStopped) {
             for (Player player : players) {
                 if(player.getSign().equalsIgnoreCase(winnersSign)) {
                     winner = player;
