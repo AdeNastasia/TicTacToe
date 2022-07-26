@@ -21,9 +21,9 @@ public class TicTacToe {
         while (!isGameStopped) {
             move(currentPlayer);
             drawGameField();
-            winnerExist();
+            if (winnerExist()) break;
+            canMove();
         }
-        System.out.printf("\n%s, congratulations! You won!\nGame is over", winner.getName());
         scanner.close();
     }
 
@@ -61,6 +61,7 @@ public class TicTacToe {
         players[0] = player1;
         players[1] = player2;
     }
+
     public static Player whoIsFirst() {
         Player isFirstPlayer = null;
         for (Player player : players) {
@@ -82,8 +83,8 @@ public class TicTacToe {
             System.out.printf("%s, oops! It's not an empty ceil. Try it again\n", currentPlayer.getName());
             move(player);
         } else {
-                changeGameField(nextLine, nexColumn);
-                changeCurrentPlayer();
+            changeGameField(nextLine, nexColumn);
+            changeCurrentPlayer();
         }
 
     }
@@ -115,7 +116,7 @@ public class TicTacToe {
 
     public static void changeGameField(int line, int column) {
         for (Player player : players) {
-            if(player.isCurrentPlayer()) {
+            if (player.isCurrentPlayer()) {
                 gameField[line][column] = player.getSign();
             }
         }
@@ -131,7 +132,7 @@ public class TicTacToe {
         }
     }
 
-    public static void winnerExist() {
+    public static boolean winnerExist() {
         String winnersSign = "";
         boolean isFirstDiagonalFull = false;
         boolean isSecondDiagonalFull = false;
@@ -152,25 +153,43 @@ public class TicTacToe {
 
         for (int i = 0; i < HEIGHT; i++) {
             int j = 0;
-                if (gameField[i][j].equalsIgnoreCase(gameField[i][j + 1]) &&
-                gameField[i][j].equalsIgnoreCase(gameField[i][j + 2]) && !gameField[i][j].equals("_")) {
-                   isAnyVerticalFull = true;
-                   winnersSign = gameField[i][j];
-                } else if (gameField[j][i].equalsIgnoreCase(gameField[j + 1][i]) &&
-                        gameField[j][i].equalsIgnoreCase(gameField[j + 2][i]) && !gameField[j][i].equals("_")) {
-                    isAnyHorizontalFull = true;
-                    winnersSign = gameField[j][i];
+            if (gameField[i][j].equalsIgnoreCase(gameField[i][j + 1]) &&
+                    gameField[i][j].equalsIgnoreCase(gameField[i][j + 2]) && !gameField[i][j].equals("_")) {
+                isAnyVerticalFull = true;
+                winnersSign = gameField[i][j];
+            } else if (gameField[j][i].equalsIgnoreCase(gameField[j + 1][i]) &&
+                    gameField[j][i].equalsIgnoreCase(gameField[j + 2][i]) && !gameField[j][i].equals("_")) {
+                isAnyHorizontalFull = true;
+                winnersSign = gameField[j][i];
             }
         }
 
         isGameStopped = isAnyHorizontalFull || isAnyVerticalFull || isFirstDiagonalFull || isSecondDiagonalFull;
         if (isGameStopped) {
             for (Player player : players) {
-                if(player.getSign().equalsIgnoreCase(winnersSign)) {
+                if (player.getSign().equalsIgnoreCase(winnersSign)) {
                     winner = player;
                 }
             }
+            System.out.printf("\n%s, congratulations! You won!\nGame is over", winner.getName());
         }
+        return isGameStopped;
 
+    }
+
+    public static void canMove() {
+        boolean isAnEmptyCeil = false;
+        for (String[] strings : gameField) {
+            for (String string : strings) {
+                if (string.equalsIgnoreCase("_")) {
+                    isAnEmptyCeil = true;
+                    break;
+                }
+            }
+        }
+        if (!isAnEmptyCeil) {
+            isGameStopped = true;
+            System.out.println("There is no empty ceil for next step ando also we have no winner. Game stopped.");
+        }
     }
 }
